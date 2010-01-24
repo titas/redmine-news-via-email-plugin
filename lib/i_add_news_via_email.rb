@@ -54,6 +54,8 @@ module IAddNewsViaEmail
 
         def receive_news_comment(identifier, title)
           project = Project.find_by_identifier(identifier)
+          # check permission
+          raise UnauthorizedAction unless user.allowed_to?(:comment_news, project)
           news = News.find(:first, :conditions => {:project_id => project.id, :title => title})
           comment = Comment.new(:commented_type => "News", :author => user, :comments => plain_text_body.to_s)
           news.comments << comment
