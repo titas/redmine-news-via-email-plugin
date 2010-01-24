@@ -1,0 +1,31 @@
+IAddNewsViaEmail
+===============
+
+This integrates with redmine and lets news and comments for news creation via email.
+Created with Rails 2.3.5 and Redmine 0.8.4
+
+
+Example
+=======
+
+Make sure You have the permissions to manage news (or comment news).
+
+For creating news, send an email (almost the same as issue creation via email)
+
+start_sample:
+Project: project_identifier
+Summary: one line summary, may contain spaces, optional
+Type: news
+This is just a
+multiline
+description of the news.
+end_sample.
+
+Summary is not mandatory. Title comes from email subject. Type and Project are mandatory, case sensitive. 
+Description is also mandatory (at least one symbol, this is a rule set by Redmine).
+
+To comment on news: just push the reply button, when You have been notified about the news via email. 
+
+Notifications should be enabled in Administration/Settings/Email Notifications.
+
+Copyright (c) 2010 [Titas Norkunas], released under the MIT license
