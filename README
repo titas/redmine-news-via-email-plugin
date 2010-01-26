@@ -2,7 +2,7 @@ IAddNewsViaEmail
 ===============
 
 This integrates with redmine and lets news and comments for news creation via email.
-Created with Rails 2.3.5 and Redmine 0.8.4
+Created with Ruby 1.8.7, Rails 2.3.5 and Redmine 0.8.4 (also tested with 0.8.8)
 
 
 Example
