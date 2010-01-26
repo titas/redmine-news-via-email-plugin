@@ -44,7 +44,7 @@ module IAddNewsViaEmail
           raise MissingInformation.new("No News description") if plain_text_body.blank?
           # should I check if description is empty and raise MissingInformation? This happens otherwise:
           # Validation failed: Description activerecord_error_blank
-          news = News.new(:title => email.subject.chomp.toutf8, :author => user, :project => project,
+          news = News.new(:title => email.subject.chomp, :author => user, :project => project,
             :summary => summary.to_s, :description => plain_text_body.to_s)
           news.save!
           Mailer.deliver_news_added(news) if Setting.notified_events.include?('news_added')
