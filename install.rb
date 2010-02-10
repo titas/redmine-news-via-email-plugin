@@ -1,1 +1,1 @@
-# Install hook code here
+# run rake install
