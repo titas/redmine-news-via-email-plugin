@@ -64,9 +64,24 @@ change the default value to the status id You want issue status to update to.
 When email with revision is received each changeset that occured before in the same repository
 and is not deployed is checked as deployed and its issue statuses are updated.
 
-If You change status from the default status that is set after "Fixes #X", the issue status will not update.
+If You change status from the default status that is set after "Fixes #XXX", the issue status will not update.
 
 You are all set up, now all You need is http://github.com/titas/i_notify_about_deployment
+
+Advanced/Test
+================
+
+"Ok, I have done everyting, does it work?"
+
+Fix an issue on a project with i_notify installed.
+Commit with "Fixes #XXX" (status should change to Your configured status).
+Push
+cap deploy
+Check project news
+
+On not so great success check permissions to post news, emails, passwords,
+redmine configuration (config.yml commit_deployed_status_id,commit_fix_status_id)
+or contact me on github.
 
 Feedback
 ========
