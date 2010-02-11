@@ -55,7 +55,10 @@ text
 Advanced/Install
 ================
 
-First install the plugin by running rake i_add_news_via_email:install
+run script/install git://github.com/titas/redmine-news-via-email-plugin.git
+This runs rake i_add_news_via_email:install RAILS_ENV=production. If you want
+to test in development environment or You have manually copied the plugin directory
+run rake i_add_news_via_email:install with selected environment yourself.
 # TODO
 # uninstall - basically drop Changeset.deployed and delete config.yml field created
 Now go to #{RAILS_ROOT}/config/settings.yml and find commit_deployed_status_id attribute,
