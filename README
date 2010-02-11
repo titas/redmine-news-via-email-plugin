@@ -1,9 +1,10 @@
 IAddNewsViaEmail
-===============
+================
 
 This integrates with redmine and lets news and comments for news creation via email.
 Created with Ruby 1.8.7, Rails 2.3.5 and Redmine 0.8.4 (also tested with 0.8.8)
 
+The main idea is to integrate with scm and update issues on deployments, please read "Advanced" for that.
 
 Example
 =======
@@ -24,8 +25,52 @@ end_sample.
 Summary is not mandatory. Title comes from email subject. Type and Project are mandatory, case sensitive. 
 Description is also mandatory (at least one symbol, this is a rule set by Redmine).
 
-To comment on news: just push the reply button, when You have been notified about the news via email. 
+# TODO
+# To comment on news: just push the reply button, when You have been notified about the news via email.
 
 Notifications should be enabled in Administration/Settings/Email Notifications.
 
-Copyright (c) 2010 [Titas Norkunas], released under the MIT license
+Advanced
+========
+Do You have integration with scm?
+Are You using "Fixes #2" or Implements "#11265" in your commits?
+Is there a difference between "Resolved" and "Production"/"Testing" statuses in Your projects?
+If all of those are true, You probably are changing all fixed issues status from 1st to 2nd on deployments manually.
+
+No more!
+
+On receiving news about deployment issue statuses are automatically updated.
+Use http://github.com/titas/i_notify_about_deployment plugin and You won't even need to send emails manually.
+
+But just in case, email format should be:
+
+Project: project_identifier
+Summary: one line summary, may contain spaces, optional
+Type: news
+Revision: revision
+ChangeIssueStatus: true
+multiline
+text
+
+Advanced/Install
+================
+
+First install the plugin by running rake i_add_news_via_email:install
+# TODO
+# uninstall - basically drop Changeset.deployed and delete config.yml field created
+Now go to #{RAILS_ROOT}/config/settings.yml and find commit_deployed_status_id attribute,
+change the default value to the status id You want issue status to update to.
+
+When email with revision is received each changeset that occured before in the same repository
+and is not deployed is checked as deployed and its issue statuses are updated.
+
+If You change status from the default status that is set after "Fixes #X", the issue status will not update.
+
+You are all set up, now all You need is http://github.com/titas/i_notify_about_deployment
+
+Feedback
+========
+Is very appreciated!
+Write me a message on github if You like my idea :)
+
+Copyright (c) 2010 Titas Norkunas, released under the MIT license
