@@ -48,7 +48,7 @@ module IAddNewsViaEmail
           cis = change_issue_status.to_s == "true"
           if !revision.blank?
             logger.info "IAddNewsViaEmail::MailHandler: revision OK" if logger && logger.info
-            if project.repository
+            if project.repository and user.allowed_to?(:manage_repository, project)
               Repository.fetch_changesets
               logger.info "IAddNewsViaEmail::MailHandler: repo fetch changes ok" if logger && logger.info
               currentry_deployed_cs = Changeset.find(:first,
@@ -63,7 +63,7 @@ module IAddNewsViaEmail
                 not_deployed_changesets.each do |ndc|
                   logger.info "IAddNewsViaEmail::MailHandler: cs id = #{ndc.id}" if logger && logger.info
                   ndc.issues.each do |ndc_i|
-                    if cis
+                    if cis and user.allowed_to?(:edit_issues, project)
                       if ndc_i.status_id == Setting[:commit_fix_status_id].to_i
                         logger.info "IAddNewsViaEmail::MailHandler: issue id = #{id}" if logger && logger.info
                         ndc_i.status_id = Setting[:commit_deployed_status_id].to_i

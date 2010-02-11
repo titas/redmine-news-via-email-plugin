@@ -64,9 +64,9 @@ run rake i_add_news_via_email:install with selected environment yourself.
 Now go to #{RAILS_ROOT}/config/settings.yml and find commit_deployed_status_id attribute,
 change the default value to the status id You want issue status to update to.
 
-My advice is to create a special role in your projects (Reporter) give it to the user who is notifying with email.
-Be sure to give this role all neccessary permissions (repository, news checking, issue editing) AND check the workflow
-so that commit_deployed_status_id could be set from commit_fix_status_id.
+Now You need to create a user that will notify redmine with email. User needs a workflow and permissions,
+You can do it manually or autogenerate with rake:
+rake i_add_news_via_email:create_robo_role login=robologin password=robopassword mail=robo_email@gmail.com project=sandbox
 
 When email with revision is received each changeset that occured before in the same repository
 and is not deployed is checked as deployed and its issue statuses are updated.
