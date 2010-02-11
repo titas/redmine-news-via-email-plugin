@@ -37,6 +37,7 @@ module IAddNewsViaEmail
         end
 
         def receive_news
+          logger.info "IAddNewsViaEmail::MailHandler: receiving news" if logger && logger.info
           project = target_project
           summary = get_keyword(:summary, {:override => true})
           revision = get_keyword(:revision, {:override => true})
@@ -45,28 +46,36 @@ module IAddNewsViaEmail
           raise UnauthorizedAction unless user.allowed_to?(:manage_news, project)
           news_body = plain_text_body.to_s
           cis = change_issue_status.to_s == "true"
-          if revision
+          if !revision.blank?
+            logger.info "IAddNewsViaEmail::MailHandler: revision OK" if logger && logger.info
             if project.repository
-              project.repository.fetch_changesets
+              Repository.fetch_changesets
+              logger.info "IAddNewsViaEmail::MailHandler: repo fetch changes ok" if logger && logger.info
               currentry_deployed_cs = Changeset.find(:first,
-                :conditions => ["revision = ? and repository_id = ?", revision, project.repository_id])
-              if currentry_deployed_cs
+                :conditions => ["revision = ? and repository_id = ?", revision, project.repository.id])
+              if !currentry_deployed_cs.nil?
+                logger.info "IAddNewsViaEmail::MailHandler: currently deployed cs exists" if logger && logger.info
                 issues_updated = []
                 not_deployed_changesets = project.repository.changesets.find(:all,
-                  :conditions => ["commited_on <= ? and deployed = 0 and repository_id = ?",
-                    currentry_deployed_cs.commited_on, project.repository_id])
+                  :conditions => ["committed_on <= ? and deployed = 0 and repository_id = ?",
+                    currentry_deployed_cs.committed_on, project.repository.id])
+                logger.info "IAddNewsViaEmail::MailHandler: change issue status? #{cis}" if logger && logger.info
                 not_deployed_changesets.each do |ndc|
+                  logger.info "IAddNewsViaEmail::MailHandler: cs id = #{ndc.id}" if logger && logger.info
                   ndc.issues.each do |ndc_i|
                     if cis
-                      if ndc_i.status_id == Settings[:commit_fix_status_id]
-                        ndc_i.status_id = Settings[:commit_deployed_status_id]
-                        issues_updated << ndc_i.id
+                      if ndc_i.status_id == Setting[:commit_fix_status_id].to_i
+                        logger.info "IAddNewsViaEmail::MailHandler: issue id = #{id}" if logger && logger.info
+                        ndc_i.status_id = Setting[:commit_deployed_status_id].to_i
+                        ndc_i.save
+                        issues_updated << "##{ndc_i.id}"
                       end
                     end
                   end
                   ndc.deployed = true
                   ndc.save
                 end
+                logger.info "IAddNewsViaEmail::MailHandler: issues: #{issues_updated.join(', ')}" if logger && logger.info
                 news_body += "\nDeployed: #{issues_updated.join(', ')}" if !issues_updated.empty?
               end
             end
