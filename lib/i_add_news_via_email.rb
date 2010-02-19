@@ -106,6 +106,7 @@ module IAddNewsViaEmail
                 reminders_text = "" if reminders
                 not_deployed_changesets.each do |ndc|
                   my_logger.debug("processing cs: #{ndc.id}; issues count: #{ndc.issues.length}") if my_log
+                  my_logger.debug("reminders: #{ndc.comments.scan(/reminder: (.+)/).to_s};") if my_log and reminders
                   reminders_text += ndc.comments.scan(/reminder: (.+)/).to_s if reminders
                   logger.info "IAddNewsViaEmail::MailHandler: cs id = #{ndc.id}" if logger && logger.info
                   ndc.issues.each do |ndc_i|
@@ -130,7 +131,7 @@ module IAddNewsViaEmail
                 my_logger.debug("are there issues which were updated?: #{!issues_updated.empty?}") if my_log
                 my_logger.debug("are there any reminders?: #{reminders_text}") if my_log and reminders
                 news_body = "#{news_body}\nDeployed: #{issues_updated.join(', ')}" if !issues_updated.empty?
-                news_body = "#{news_body}\nReminders:\n#{reminders_text}" if reminders
+                news_body = "#{news_body}\nReminders:\n#{reminders_text}" if reminders and !reminders_text.blank?
                 my_logger.debug("news body: #{news_body}") if my_log
               end
             end
