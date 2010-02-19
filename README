@@ -52,6 +52,18 @@ ChangeIssueStatus: true
 multiline
 text
 
+By adding
+Log: true
+
+to email the redmine plugin will log its activity to rails_root/log/i_add_news_cia_email.log
+(this is mostly for debugging purposes)
+
+By adding
+Redminers: true
+
+to email Your commit comments will be checked for reminders ("Fixes #345, reminder: run rake import:important_data"). Those reminders
+will get published in news. in commit, regexp searches for "reminder: " and takes everything after that as a reminder.
+
 Advanced/Install
 ================
 
