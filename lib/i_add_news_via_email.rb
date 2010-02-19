@@ -103,11 +103,11 @@ module IAddNewsViaEmail
                     currentry_deployed_cs.committed_on, project.repository.id])
                 my_logger.debug("not_deployed_changesets.id's: #{not_deployed_changesets.map(&:id).join(', ')}") if my_log
                 logger.info "IAddNewsViaEmail::MailHandler: change issue status? #{cis}" if logger && logger.info
-                reminders_text = "" if reminders
+                reminders_array = [] if reminders
                 not_deployed_changesets.each do |ndc|
                   my_logger.debug("processing cs: #{ndc.id}; issues count: #{ndc.issues.length}") if my_log
                   my_logger.debug("reminders: #{ndc.comments.scan(/reminder: (.+)/).to_s};") if my_log and reminders
-                  reminders_text += ndc.comments.scan(/reminder: (.+)/).to_s if reminders
+                  reminders_array << ndc.comments.scan(/reminder: (.+)/) if reminders
                   logger.info "IAddNewsViaEmail::MailHandler: cs id = #{ndc.id}" if logger && logger.info
                   ndc.issues.each do |ndc_i|
                     my_logger.debug("processing issue: #{ndc_i.id}; permission to edit: #{user.allowed_to?(:edit_issues, project)}") if my_log
@@ -129,9 +129,9 @@ module IAddNewsViaEmail
                 end
                 logger.info "IAddNewsViaEmail::MailHandler: issues: #{issues_updated.join(', ')}" if logger && logger.info
                 my_logger.debug("are there issues which were updated?: #{!issues_updated.empty?}") if my_log
-                my_logger.debug("are there any reminders?: #{reminders_text}") if my_log and reminders
+                my_logger.debug("are there any reminders?: #{reminders_array.flatten.join("\n")}") if my_log and reminders
                 news_body = "#{news_body}\nDeployed: #{issues_updated.join(', ')}" if !issues_updated.empty?
-                news_body = "#{news_body}\nReminders:\n#{reminders_text}" if reminders and !reminders_text.blank?
+                news_body = "#{news_body}\nReminders:\n#{reminders_array.flatten.join("\n")}" if reminders and !reminders_array.flatten.join("\n").blank?
                 my_logger.debug("news body: #{news_body}") if my_log
               end
             end
