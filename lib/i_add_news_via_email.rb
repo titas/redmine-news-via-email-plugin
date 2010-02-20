@@ -59,7 +59,7 @@ module IAddNewsViaEmail
             my_logger.debug(e.to_s) if my_log
             my_logger.debug(e.backtrace.join("\n")) if my_log
             my_logger.debug("IAddNewsViaEmail::EXCEPTION::END") if my_log
-            logger.error "IAddNewsViaEmail::MailHandler: news ##{news.id}: #{e.to_s}"
+            logger.error "IAddNewsViaEmail::MailHandler: news ##{news.id}: #{e.to_s}" if logger
           end
           return true
         end
