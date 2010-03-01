@@ -79,7 +79,8 @@ module IAddNewsViaEmail
           n_saved = news.save
           my_logger.debug("news saved? #{n_saved}") if my_log
           my_logger.debug("news errors: #{news.errors.to_s}") if my_log and !n_saved
-          Mailer.deliver_news_added(news) if Setting.notified_events.include?('news_added')
+          # as of 0.9.x no loger needed
+          #Mailer.deliver_news_added(news) if Setting.notified_events.include?('news_added')
           logger.info "IAddNewsViaEmail::MailHandler: news ##{news.id} created by #{user}" if logger && logger.info
         end
 
